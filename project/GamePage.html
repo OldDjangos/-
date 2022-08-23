@@ -1,0 +1,287 @@
+<!-- 
+Tititle: COMP3820 Project
+File: GamePage.html
+Description: html file contain html tag, css layout, 
+             vertex shader, fragment shader,
+             uniform attibute
+Author: ZiCheng Ren 
+Student ID:T00548429
+Date: 04/14/2021
+-->
+<!DOCTYPE html>
+<html>
+<style>
+body{
+    background:url('BackGround.jpg') no-repeat;
+    background-size:cover;
+}
+
+#ButtonX, #ButtonY, #ButtonZ, #ButtonT,
+#dog_img, #cat_img, #panda_img,
+#start_timer, #submit, #clearLast, #clearAll{
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+#ButtonX:hover, #ButtonY:hover, #ButtonZ:hover,
+#ButtonT:hover, #dog_img:hover, #cat_img:hover, 
+#panda_img:hover, #start_timer:hover, #submit:hover, 
+#clearLast:hover, #clearAll:hover{
+    background-color: #3e8e41;
+}
+
+#ButtonX:active, #ButtonY:active, #ButtonZ:active,
+#ButtonT:active, #dog_img:active, #cat_img:active, 
+#panda_img:active, #start_timer:active, #submit:active, 
+#clearLast:active, #clearAll:active{
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+#col-1{
+  position: relative;
+  width: 50%;
+  float: left;
+  height: 100%;
+  z-index: 1010101010
+}
+
+#col-2{
+  position: relative;
+  width: 20%;
+  float: left;
+  height: 100%;
+  z-index: 1010101010;
+}
+
+#col-3{
+  position: relative;
+  width: 30%;
+  float: left;
+  height: 100%;
+  z-index: 1010101010;
+}
+
+p{ 
+    color: #cc2c4f; 
+    font-family: 'Lobster', cursive; 
+    font-size: 25px; 
+    font-weight: normal;
+    margin-top: 0px;  
+    margin-bottom: 5px; 
+    text-shadow: 1px 0 0 rgb(121, 119, 119); 
+}
+
+#target {
+  border: 1px solid #ddd;
+  width: 300px;
+  height: 300px;
+}
+
+#img1,#img2,#img3,#img4,#img5,#img6{
+    border: 1px solid #ddd;
+    width: 160px;
+    height: 100px;
+}
+
+li, #countdown{
+    color: #fa6807; 
+    font-family: 'Raleway',sans-serif; 
+    font-size: 15px; 
+    margin: 0 0 24px; 
+    text-align: left; 
+    font-weight: bold;
+}
+</style>
+
+<body>
+
+<img id = "textureImage1" src = "dog.png"  hidden></img>
+<img id = "textureImage2" src = "panda.png"  hidden></img>
+<img id = "textureImage3" src = "cat.png"  hidden></img>
+
+<div id="col-1">
+    <canvas id="gl-canvas" width="700" height="700"> </canvas>
+    <p>controller</p>
+    <div>
+        <button id = "ButtonX">Rotate X</button>
+        <button id = "ButtonY">Rotate Y</button>
+        <button id = "ButtonZ">Rotate Z</button>
+        <button id = "ButtonT">Toggle Rotation</button>
+    </div>
+    <p>Change Image</p>
+    <div>
+        <button id = "dog_img">Dog</button>
+        <button id = "panda_img">Panda</button>
+        <button id = "cat_img">Cat</button>
+    </div>
+    <p>Option</p>
+    <div>
+    <button id = "start_timer">Start</button>
+    <button id = "submit">submit</button>
+    <button id = "clearLast">Clear Last Picked</button>
+    <button id = "clearAll">Clear All</button>
+    </div>
+    <p>Game rule</p>
+    <ul>
+        <li>Observe the texture corresponding to each face of the cube.</li>
+        <li>When you think you are ready, click start.</li>
+        <li>click on one of the faces of the cube.</li>
+        <li>The picture corresponding to the face of the 
+            cube that you clicked will appear in "current choose"(Right side of the screen)</li>
+        <li>You need to make the pictures in "current choose" satisfy the target picture</li>
+        <li>When you think you are done click "submit" button.</ul>
+    </ul>
+    <p>Controls rule</p>
+    <ul>
+        <li>If you have not clicked "start" button, you can use your mouse to drag the cube,
+            or click "Toggle Rotation" button to let him rotate automatically.
+        </li>
+        <li>Once, you clicked "start" button the game will start. You cannot use your mouse to drag
+            the cube anyone. But, you still can use the control button(Rotate X, Rotate Y, Rotate Z, 
+            Toggle Rotation).
+        </li>
+        <li>Drag: moving the mouse to the right, cube will rotate -x</li>
+        <li>Drag: moving the mouse to the left, cube will rotate +x</li>
+        <li>Drag: moving the mouse to the up, cube will rotate -y</li>
+        <li>Drag: moving the mouse down, cube will rotate +y</li>
+    </ul>
+    <audio src="pick.mp3" controls="controls" preload id="click_sound" hidden></audio>
+    <audio src="win.mp3" controls="controls" preload id="win_sound" hidden></audio>
+    <audio src="fail.mp3" controls="controls" preload id="fail_sound" hidden></audio>
+    <audio src="cube_pick.mp3" controls="controls" preload id="cube_sound" hidden></audio>
+</div>
+
+<div id="col-2">
+    <p>Timer</p>
+    <span id = "countdown"></span>
+    <p>Target</p>
+    <img src="dog1.jpg" id="target" alt="Paris" />
+</div>
+
+<div id="col-3">
+    <p>Current Choose</p>
+    <div id="choose_face">
+            <div><img id = "img1" src="blank.png"></img></div>
+            <div><img id = "img2" src="blank.png"></img></div>
+            <div><img id = "img3" src="blank.png"></img></div>
+            <div><img id = "img4" src="blank.png"></img></div>
+            <div><img id = "img5" src="blank.png"></img></div>
+            <div><img id = "img6" src="blank.png"></img></div>
+    </div>
+</div>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+#version 300 es
+
+in vec4 aPosition;
+in vec3 aNormal;
+in vec4 aColor;
+in vec2 aTexCoord;
+
+out vec4 vColor;
+out vec2 vTexCoord;
+
+uniform vec4 uAmbientProduct, uDiffuseProduct, uSpecularProduct;
+uniform mat4 uModelViewMatrix;
+uniform mat4 uProjectionMatrix;
+uniform vec4 uLightPosition;
+uniform float uShininess;
+
+void main()
+{
+    vec3 pos = -(uModelViewMatrix * aPosition).xyz;
+
+    //light postion
+    vec3 light = uLightPosition.xyz;
+
+    vec3 L = normalize(light - pos);
+    vec3 E = normalize(-pos);
+    vec3 H = normalize(L + E);
+    vec4 NN = vec4(aNormal,0);
+
+    // Transform vertex normal into eye coordinates
+    vec3 N = normalize((uModelViewMatrix*NN).xyz);
+
+    // Compute terms in the illumination equation
+    vec4 ambient = uAmbientProduct;
+
+    float Kd = max(dot(L, N), 0.0);
+    vec4  diffuse = Kd * uDiffuseProduct;
+
+    float Ks = pow( max(dot(N, H), 0.0), uShininess );
+    vec4 specular = Ks * uSpecularProduct;
+
+    if( dot(L, N) < 0.0 ) {
+        specular = vec4(0.0, 0.0, 0.0, 1.0);
+    }
+    gl_Position = uProjectionMatrix * uModelViewMatrix *aPosition;
+    vTexCoord = aTexCoord;
+    vColor = ambient + diffuse + specular + aColor;
+    vColor.a = 1.0;  
+}
+</script>
+    
+<script id="fragment-shader" type="x-shader/x-fragment">
+#version 300 es
+
+precision mediump float;
+
+uniform int uColorIndex;
+
+in vec4 vColor;
+in vec2 vTexCoord;
+
+out vec4 fColor;
+uniform sampler2D uTextureMap1;
+uniform sampler2D uTextureMap2;
+uniform sampler2D uTextureMap3;
+uniform int texture_face;
+uniform int texture_img_index;
+void main()
+{
+    vec4 T;
+    if(texture_face == 0)
+    {      
+        vec4 c[7];
+        c[0] = vColor;
+        c[1] = vec4(1.0, 0.0, 0.0, 1.0);
+        c[2] = vec4(0.0, 1.0, 0.0, 1.0);
+        c[3] = vec4(0.0, 0.0, 1.0, 1.0);
+        c[4] = vec4(1.0, 1.0, 0.0, 1.0);
+        c[5] = vec4(0.0, 1.0, 1.0, 1.0);
+        c[6] = vec4(1.0, 0.0, 1.0, 1.0);
+        //c[7] = vec4(0.0, 0.0, 0.0, 1.0);
+        //c[8] = vec4(1.0, 1.0, 1.0, 1.0);   
+    
+        if(uColorIndex==0) fColor = c[0];
+        else fColor = c[uColorIndex];
+    }else{
+        if(texture_img_index == 0){
+            T = texture(uTextureMap1, vTexCoord);
+        }else if(texture_img_index == 1){
+            T = texture(uTextureMap2, vTexCoord);
+        }else if(texture_img_index == 2){
+            T = texture(uTextureMap3, vTexCoord);
+        }     
+        fColor = T;
+    }
+}
+</script>
+    
+<script src="../Common/initShaders.js"></script>
+<script src="../Common/MVnew.js"></script>
+<script src="GamePage.js"></script>
+</body>
+</html>

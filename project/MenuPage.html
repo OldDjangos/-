@@ -1,0 +1,138 @@
+<!-- 
+Tititle: COMP3820 Project
+File: MenuPage.html
+Description: Welcome page, html file contain html tag, css layout, 
+             vertex shader, fragment shader,
+             uniform attibute
+Author: ZiCheng Ren 
+Student ID:T00548429
+Date: 04/14/2021
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ZiCheng Ren Project</title>  
+<style>
+body{
+    background:url('BackGround.jpg') no-repeat;
+    background-size: auto;
+}
+
+span{
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 100px;
+    letter-spacing:0.1em;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke-width: 3px;
+    -webkit-text-stroke-color: white;
+    text-shadow: 8px 8px #ff1f8f, 20px 20px #000000;
+}
+
+.start_game{ 
+    display: inline-block; 
+    padding: 15px 20px; 
+    font-size: 15px; 
+    cursor: pointer; 
+    text-align: center; 
+    text-decoration: none; 
+    outline: none; 
+    color: #fff; 
+    background-color:  #58b4ff; 
+    border: none; 
+    border-radius: 15px; 
+    box-shadow: 0 9px #999;
+}
+
+.start_game:hover{
+    background-color: #447baf
+}
+
+.start_game:active{
+    background-color: #447baf; 
+    box-shadow: 0 5px #666; 
+    transform: translateY(4px);
+}
+
+.back_homePage{ 
+    display: inline-block; 
+    padding: 15px 20px; 
+    font-size: 15px; 
+    cursor: pointer; 
+    text-align: center; 
+    text-decoration: none; 
+    outline: none; 
+    color: #fff; 
+    background-color: #f36671; 
+    border: none; 
+    border-radius: 15px; 
+    box-shadow: 0 9px #999;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.back_homePage:hover{
+    background-color: #a32d32;
+}
+
+.back_homePage:active{
+    background-color: #a32d32; 
+    box-shadow: 0 5px #666; 
+    transform: translateY(4px);
+}
+
+#menu{
+    position: absolute;
+    top: 35%;
+    left: 45%;
+}
+
+#start_music{
+    position:relative;
+    width: 30px;
+    height: 30px;
+}
+</style>
+</head>     
+
+<body>
+
+<div>
+    <span>Puzzle Game</span>
+</div>
+<div id="menu">
+        <button class="start_game" id="start_game">Start Game</button>    
+        <button class="back_homePage" id="back_homePage">Exit</button>
+</div>
+
+<img src="unmute.png" id="start_music" />
+
+<audio id="bgm" controls autoplay loop hidden> 
+    <source src="background music.mp3" type="audio/mpeg"> 
+</audio>
+
+<script type="text/javascript">
+//enter the GamePage.html
+document.getElementById("start_game").onclick = function(){
+    window.location.href="GamePage.html";
+};
+
+//Exit
+document.getElementById("back_homePage").onclick = function(){
+    var win = window.open("about:blank", "_self");
+    win.close();
+};
+
+//start the music
+document.getElementById("start_music").onclick = function(){
+    var audio = document.getElementById('bgm'); 
+    if(audio.paused){                 
+        audio.play();
+    }
+};     
+</script>
+</body>
+</html>
